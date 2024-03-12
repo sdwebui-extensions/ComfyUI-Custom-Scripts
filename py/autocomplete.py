@@ -25,5 +25,6 @@ async def update_autocomplete(request):
 
 @PromptServer.instance.routes.get("/pysssss/loras")
 async def get_loras(request):
-    loras = folder_paths.get_filename_list("loras")
-    return web.json_response(list(map(lambda a: os.path.splitext(a)[0], loras)))
+    return web.json_response([])
+    # loras = folder_paths.get_filename_list("loras")
+    # return web.json_response(list(map(lambda a: os.path.splitext(a)[0], loras)))
