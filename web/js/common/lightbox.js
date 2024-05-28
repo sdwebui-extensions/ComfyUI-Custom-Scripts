@@ -62,6 +62,13 @@ export class Lightbox {
 			onclick: (e) => {
 				e.stopImmediatePropagation();
 			},
+			onwheel: (e) => {
+				if (!(e instanceof WheelEvent) || e.ctrlKey) {
+					return;
+				}
+				const direction = Math.sign(e.deltaY);
+				this.update(direction);
+			},
 		});
 	}
 
@@ -106,6 +113,16 @@ export class Lightbox {
 		this.link.href = img;
 		this.img.src = img;
 		this.img.style.opacity = 1;
+	}
+
+	async updateWithNewImage(img, feedDirection) {
+		// No-op if lightbox is not open
+		if (this.el.style.display === "none" || this.el.style.opacity === "0") return;
+
+		// Ensure currently shown image does not change
+		const [method, shift] = feedDirection === "newest first" ? ["unshift", 1] : ["push", 0];
+		this.images[method](img);
+		await this.update(shift);
 	}
 }
 
