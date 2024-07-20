@@ -246,8 +246,14 @@ app.registerExtension({
 					const v = this.widgets[0].value.content;
 					const pos = v.lastIndexOf(".");
 					const name = v.substr(0, pos);
-
-					const example = await (await get("view", `/${name}/${exampleList.value}`)).text();
+					let exampleName = exampleList.value;
+					let viewPath = `/${name}`;
+					if (exampleName === "notes") {
+						viewPath += ".txt";
+					} else {
+						viewPath += `/${exampleName}`;
+					}
+					const example = await (await get("view", viewPath)).text();
 					if (!exampleWidget) {
 						exampleWidget = ComfyWidgets["STRING"](this, "prompt", ["STRING", { multiline: true }], app).widget;
 						exampleWidget.inputEl.readOnly = true;
@@ -262,6 +268,7 @@ app.registerExtension({
 					return exampleCb?.apply(this, arguments) ?? exampleList.value;
 				};
 
+
 				const listExamples = async () => {
 					exampleList.disabled = true;
 					exampleList.options.values = ["[none]"];
@@ -273,10 +280,14 @@ app.registerExtension({
 						} catch (error) {}
 					}
 					exampleList.options.values = ["[none]", ...examples];
+					exampleList.value = exampleList.options.values[+!!examples.length];
 					exampleList.callback();
 					exampleList.disabled = !examples.length;
 					app.graph.setDirtyCanvas(true, true);
 				};
+
+				// Expose function to update examples
+				nodeType.prototype["pysssss.updateExamples"] = listExamples;
 
 				const modelWidget = this.widgets[0];
 				const modelCb = modelWidget.callback;
@@ -296,6 +307,13 @@ app.registerExtension({
 				setTimeout(() => {
 					modelWidget.callback();
 				}, 30);
+			};
+
+			// Prevent adding HIDDEN inputs
+			const addInput = nodeType.prototype.addInput ?? LGraphNode.prototype.addInput;
+			nodeType.prototype.addInput = function (_, type) {
+				if (type === "HIDDEN") return;
+				return addInput.apply(this, arguments);
 			};
 		}
 
