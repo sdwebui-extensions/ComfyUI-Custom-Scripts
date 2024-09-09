@@ -107,24 +107,24 @@ async def save_example(request):
 def populate_items(names, type):
     for idx, item_name in enumerate(names):
 
-        file_name = os.path.splitext(item_name)[0]
-        file_path = folder_paths.get_full_path(type, item_name)
+        # file_name = os.path.splitext(item_name)[0]
+        # file_path = folder_paths.get_full_path(type, item_name)
 
-        if file_path is None:
-            print(f"(pysssss:better_combos) Unable to get path for {type} {item_name}")
-            continue
+        # if file_path is None:
+        #     print(f"(pysssss:better_combos) Unable to get path for {type} {item_name}")
+        #     continue
 
-        file_path_no_ext = os.path.splitext(file_path)[0]
+        # file_path_no_ext = os.path.splitext(file_path)[0]
 
-        for ext in ["png", "jpg", "jpeg", "preview.png", "preview.jpeg"]:
-            has_image = os.path.isfile(file_path_no_ext + "." + ext)
-            if has_image:
-                item_image = f"{file_name}.{ext}"
-                break
+        # for ext in ["png", "jpg", "jpeg", "preview.png", "preview.jpeg"]:
+        #     has_image = os.path.isfile(file_path_no_ext + "." + ext)
+        #     if has_image:
+        #         item_image = f"{file_name}.{ext}"
+        #         break
 
         names[idx] = {
             "content": item_name,
-            "image": f"{type}/{item_image}" if has_image else None,
+            "image": None,
         }
     names.sort(key=lambda i: i["content"].lower())
 

@@ -44,18 +44,20 @@ def get_real_path(dir):
 
 @PromptServer.instance.routes.get("/pysssss/text-file/{name}")
 async def get_files(request):
-    name = request.match_info["name"]
-    dir = get_dir_from_name(name)
-    recursive = "/**/" in dir
-    # Ugh cant use root_path on glob... lazy hack..
-    pre = get_real_path(dir)
-
-    files = list(map(lambda t: os.path.relpath(t, pre),
-                     glob.glob(dir, recursive=recursive)))
-
-    if len(files) == 0:
-        files = ["[none]"]
+    files = ["[none]"]
     return web.json_response(files)
+    # name = request.match_info["name"]
+    # dir = get_dir_from_name(name)
+    # recursive = "/**/" in dir
+    # # Ugh cant use root_path on glob... lazy hack..
+    # pre = get_real_path(dir)
+
+    # files = list(map(lambda t: os.path.relpath(t, pre),
+    #                  glob.glob(dir, recursive=recursive)))
+
+    # if len(files) == 0:
+    #     files = ["[none]"]
+    # return web.json_response(files)
 
 
 def get_file(root_dir, file):
