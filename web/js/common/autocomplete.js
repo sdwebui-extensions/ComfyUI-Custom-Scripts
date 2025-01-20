@@ -536,9 +536,11 @@ export class TextAreaAutoComplete {
 	#update() {
 		let before = this.helper.getBeforeCursor();
 		if (before?.length) {
-			const m = before.match(/([^\s|,|;|"]+)$/);
+			const m = before.match(/([^,;"|{}()\n]+)$/);
 			if (m) {
-				before = m[0];
+				before = m[0]
+					.replace(/^\s+/, "")
+					.replace(/\s/g, "_") || null;
 			} else {
 				before = null;
 			}
@@ -619,6 +621,7 @@ export class TextAreaAutoComplete {
 					  value = TextAreaAutoComplete.replacer(value);
 					}
 					value = this.#escapeParentheses(value);
+					
 					const afterCursor = this.helper.getAfterCursor();
 					const shouldAddSeparator = !afterCursor.trim().startsWith(this.separator.trim());
 					this.helper.insertAtCursor(
