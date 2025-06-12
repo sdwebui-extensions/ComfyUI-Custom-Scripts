@@ -11,7 +11,12 @@ config = None
 
 
 def is_logging_enabled():
-    config = get_extension_config()
+    while True:
+        try:
+            config = get_extension_config()
+            break
+        except:
+            continue
     if "logging" not in config:
         return False
     return config["logging"]
