@@ -174,7 +174,7 @@ def init(check_imports=None):
                     type="ERROR", always=True)
                 return False
 
-    install_js()
+    # install_js()
     return True
 
 
